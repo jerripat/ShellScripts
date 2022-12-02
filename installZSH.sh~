@@ -1,0 +1,86 @@
+#!/bin/bash
+
+createMenu() {
+
+  # This function creates the menu
+    PS3="Enter index: "
+	# Install curl, wget or git
+	echo 'Select curl, wget or git if needs to be installed'
+    select i in curl wget git exit; do
+        echo "You selected: $i"
+        echo "Index selected: $REPLY"
+        makeSelection "$REPLY"
+		done
+}
+
+installCWG(){
+	echo 'Installing curl...'
+	sleep 2
+	if [[ "${1}" == '1' ]]; then
+		sudo apt install curl
+		createmenu
+	echo 'Installing wget...'
+	sleep 2
+	elif [[ "${1}" == '2' ]]; then
+		sudo apt install wget
+		createmenu
+	echo 'Installing git...'
+	sleep 2
+	elif [[ "${1}" == '3' ]] ; then
+		sudo apt install git
+		createmenu
+	else
+	echo 'Cancelling install'
+	sleep 2
+	createMenu
+fi
+}
+
+doUpdate(){
+
+	echo 'Starting update...'
+	sleep 2
+	sudo apt update && sudo apt upgrade
+
+
+}
+
+makeSelection() {
+
+    echo "In makeSelection() you chose $1"
+
+    if [[ ${1} == '4' ]]; then
+        echo "Good-Bye"
+	    sleep 2
+		exit 0
+    elif [[ "${1}" == '1' ]]; then
+        installCWG ${1}
+#    elif [[ ${1} == '4' ]]; then
+#        startBackup
+#
+#    elif [[ ${1} == '5' ]]; then
+#        source tar_backup.sh
+#        echo 'tar created in Seagate2TB/backup'
+#        read -p 'Start rsync backup (y/n): ' ans1
+#        if [[ ${ans1} == 'y' ]]; then
+#            echo 'Starting rsync backup'
+#            sleep 2
+#            startBackup
+#
+#        fi
+    fi
+
+}
+
+
+# This script will install ZSH
+read -p 'Begin ZSH installation? (y/n): ' ans
+
+if [[ "${ans}" == 'y' ]] ; then
+	createMenu
+
+else
+		echo 'Cancelling installation...'
+		sleep 2
+		exit 0
+fi
