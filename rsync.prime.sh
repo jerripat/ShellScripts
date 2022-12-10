@@ -1,15 +1,24 @@
-#!/bin/bash
+#!/bin/bash	
 
 startBackup() {
 
-	echo 'Starting backup...'
-	sleep 2
-
-	# This is the Backup script for home/jerripat
-	sudo rsync -avz --progress --exclude '*.config/' --exclude '*.cache/' --exclude ' *.iso' --max-size=1g /home/jerripat/ /media/jerripat/Seagate2TB/rsync_backup/
-	echo "Done!"
-	sleep 2
-	createMenu
+	if [[ ${1} == '4' ]]; then
+		# This is the Backup script for home/jerripat
+		echo 'Starting backup to /home/jerripat'
+		sleep 2
+		sudo rsync -avz --progress --exclude '*.config/' --exclude '*.cache/' --exclude ' *.iso' --max-size=2g 	/home/jerripat/ /media/jerripat/SeagateOne/rsync_backup
+		echo "Done!"
+		sleep 2
+		createMenu
+	elif [[ ${1} == '5' ]]; then
+		sudo rsync -avz --progress --exclude '*.config/' --exclude '*.cache/' --exclude ' *.iso' --max-size=2g /home/ /media/jerripat/SeagateOne/rsync_backup/home_dir/
+		echo "Done backing up home dir!"
+		sleep 2
+		createMenu
+	elif [[ ${1} == '6' ]]; then
+		createTar
+		createMenu
+	fi
 }
 
 backupShellScripts() {
@@ -17,46 +26,66 @@ backupShellScripts() {
 	echo 'Starting ShellScript backup...'
 	sleep 2
 	# ShellScripts backup
-	sudo rsync -avz --progress /home/jerripat/ShellScripts /media/jerripat/Seagate2TB/rsync_backup/ShellScripts
+	sudo rsync -avz --progress /home/jerripat/ShellScripts /media/jerripat/SeagateOne/rsync_backup/ShellScripts
 	echo "ShellScripts backup was successfull.."
 	sleep 2
 	createMenu
+}
+
+ createTar(){
+	dest_path='/media/jerripat/SeagateOne/backup.tar.gz'
+   files_to_backup='/home/jerripat/'
+   
+   echo 'the destination is:' ${dest_path}
+   echo 'the path is:' ${files_to_backup}
+   sleep 2
+   
+  read -pr'Begin tar? (y/n) : ' ans
+ 	 if [[ ${ans} == 'y' ]]
+  		then
+  		echo 'Starting tar...'
+   		sleep 2
+  			sudo tar --exclude-caches-all --recursion -zcvpf ${dest_path} ${files_to_backup}
+  			echo 'tar.gz created...'
+  			echo 'Exiting'
+	fi
 }
 
 createMenu() {
 
 	# This function creates the menu
 	PS3="Enter index: "
-	select i in ShellScripts PythonProjects JavascriptProjects Backup Tar exit; do
+	select i in ShellScripts PythonProjects JavascriptProjects jerripat Home Tar exit; do
 		echo "You selected: $i"
 		echo "Index selected: $REPLY"
 		makeSelection "$REPLY"
 	done
-	exit 0
+	
 }
 
 makeSelection() {
 
 	echo "In makeSelection() you chose $1"
 
-	if [[ ${1} == '6' ]]; then
+	if [[ ${1} == '7' ]]; then
 		echo "You chose $1"
 		echo "Good-Bye"
-		sleep 2
+		exit 0
 
 	elif [[ "${1}" == '1' ]]; then
 		backupShellScripts
 	elif [[ ${1} == '4' ]]; then
-		startBackup
-
+		startBackup ${1}
 	elif [[ ${1} == '5' ]]; then
+		startBackup ${1}
+	elif [[ ${1} == '6' ]]; then
 		source tar_backup.sh
-		echo 'tar created in Seagate2TB/backup'
-		read -p 'Start rsync backup (y/n): ' ans1
+		echo 'tar created in SeagateOne/backup'
+		read -p 'Create Tar backup? (y/n): ' ans1
 		if [[ ${ans1} == 'y' ]]; then
-			echo 'Starting rsync backup'
+			echo 'Creating Tar backup...'
 			sleep 2
-			startBackup
+			createTar
 
 		fi
 	fi
