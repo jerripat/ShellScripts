@@ -1,0 +1,9 @@
+#!/bin/bash
+
+declare -A arr
+
+arr[foo]=1
+arr[bar]=2
+arr[baz]=3
+
+echo "$arr" 
