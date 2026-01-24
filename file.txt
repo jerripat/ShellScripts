@@ -1,6 +1,0 @@
-Hello foo (from func)
-Hello bar (from func)
-Hello baz (from func)
-Hello foo (from func)
-Hello bar (from func)
-Hello baz (from func)
