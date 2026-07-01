@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
+sudo nala update && sudo nala upgrade -y
+
 
 BACKUP_MNT="/media/jerripat/Sam"
 BACKUP_DIR="$BACKUP_MNT/backup"
