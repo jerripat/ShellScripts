@@ -3,7 +3,7 @@ set -euo pipefail
 sudo nala update && sudo nala upgrade -y
 
 
-BACKUP_MNT="/media/jerripat/Sam"
+BACKUP_MNT="/run/media/jerripat/Sam"
 BACKUP_DIR="$BACKUP_MNT/backup"
 PY_BACKUP_DIR="$BACKUP_MNT/PythonProjects"   # keep separate as requested
 HOME_DIR="/home/jerripat"
